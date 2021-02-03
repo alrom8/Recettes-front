@@ -2,26 +2,32 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Image from "react-bootstrap/Image";
-import "../css/Inscription.css";
+import {Redirect} from "react-router-dom";
 
-class Inscription extends Component {
+class Connexion extends Component {
   constructor(props) {
     super(props);
     this.state = {
       pseudo: "",
       mdp: "",
-      imageProfil: "",
+      connecté:false
     };
   }
 
-  inscrireUtilisateur() {
-    fetch("http://localhost:80/api/utilisateurs/inscription", {
+  connexion() {
+    fetch("http://localhost:80/api/utilisateurs/connexion", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(this.state),
-    }).catch((err) => console.error(err));
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.status)
+        }else{
+          window.location("/")
+        }
+      })
+      .catch((err) => console.error(err));
   }
 
   render() {
@@ -51,35 +57,16 @@ class Inscription extends Component {
               />
             </Col>
             <br></br>
-            <Col md={{ span: 4, offset: 4 }}>
-              <Form.Label>Image de profil</Form.Label>
-            </Col>
-            <Row>
-              <Col md={{ span: 1, offset: 4 }}>
-                <Image
-                  src={this.state.imageProfil}
-                  className="imageProfil"
-                  roundedCircle
-                />
-              </Col>
-              <Col md={{ span: 3 }}>
-                <Form.File
-                  className="input"
-                  onChange={(e) =>
-                    this.setState({
-                      imageProfil: URL.createObjectURL(e.target.files[0]),
-                    })
-                  }
-                />
-              </Col>
-            </Row>
-
-            <br></br>
             <Col md={{ span: 4, offset: 4 }} xs={12}>
               <Form.Control
                 type="button"
-                value="Valider"
-                onClick={() => this.inscrireUtilisateur()}
+                value="Connexion"
+                onClick={() => this.connexion()
+                  .then(()=>{
+                    if(this.state.connecté===true){
+                      return(<Redirect to="" />)
+                    }
+                  })}
               />
             </Col>
           </Form>
@@ -89,4 +76,4 @@ class Inscription extends Component {
   }
 }
 
-export default Inscription;
+export default Connexion;

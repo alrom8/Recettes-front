@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import Recette from "./Recette";
+import CarteRecette from "./CarteRecette";
 import CardDeck from "react-bootstrap/CardDeck";
+import "../css/Contenu.css"
 
 class Contenu extends Component {
   constructor(props) {
@@ -24,15 +25,12 @@ class Contenu extends Component {
   }
 
   render() {
-    //if(route = "recettes")
     return (
-      <div>
+      <div className="divContenu">
         <CardDeck>
           {this.state.recettes.map((recette) => (
-            <Recette
-              nom={recette["nom"]}
-              description={recette["decscription"]}
-              img={recette["image"]}
+            <CarteRecette
+              attributs={recette}
             />
           ))}
         </CardDeck>
